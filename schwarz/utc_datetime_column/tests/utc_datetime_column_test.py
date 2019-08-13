@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2013, 2018 Felix Schwarz
+# Copyright 2013, 2018, 2019 Felix Schwarz
 # The source code in this file is dual licensed under the MIT license or
 # the GPLv3 or (at your option) any later version.
 # SPDX-License-Identifier: MIT or GPL-3.0-or-later
@@ -12,6 +12,12 @@ from babel.util import FixedOffsetTimezone, UTC
 from pythonic_testcase import *
 from sqlalchemy import Column, Integer, MetaData, Table
 from sqlalchemy.engine import create_engine
+try:
+    # SQLAlchemy 0.7+
+    from sqlalchemy.exc import StatementError
+except ImportError:
+    # SQLAlchemy 0.6.9
+    StatementError = ValueError
 from sqlalchemy.sql import select
 
 from ..utc_datetime_column import UTCDateTime
@@ -55,7 +61,7 @@ class UTCDateTimeTest(PythonicTestCase):
 
     def test_raises_exception_for_naive_datetime(self):
         dt = DateTime(2013, 5, 25, 9, 53, 24)
-        with assert_raises(ValueError):
+        with assert_raises(StatementError):
             self._insert(dt)
 
     def test_can_store_none(self):
