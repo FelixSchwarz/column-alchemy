@@ -16,7 +16,7 @@ def requires_from_file(filename):
 
 setup(
     name='UTCDateTimeColumn',
-    version='0.3',
+    version='0.4',
 
     author='Felix Schwarz',
     author_email='info@schwarz.eu',
