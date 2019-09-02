@@ -3,11 +3,16 @@
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
-from sqlalchemy.types import Enum as SQLEnum
+from sqlalchemy.schema import CheckConstraint
+from sqlalchemy.sql import type_coerce
+from sqlalchemy.sql.elements import _defer_name
+from sqlalchemy.sql.sqltypes import SchemaType
+from sqlalchemy.types import Enum as SQLEnum, Integer, TypeDecorator
 
 
 __all__ = [
     'get_enum_value',
+    'IntValuesEnum',
     'ValuesEnum',
 ]
 
@@ -41,6 +46,40 @@ def ValuesEnum(enum_class, **enum_kwargs):
     2. Enum values must be strings.
     """
     return SQLEnum(enum_class, values_callable=get_enum_values, **enum_kwargs)
+
+
+
+# SchemaType: "Mark a type as possibly requiring schema-level DDL for usage."
+class IntValuesEnum(TypeDecorator, SchemaType):
+    impl = Integer
+
+    def __init__(self, enum_class, create_constraint=True, *args, **kwargs):
+        self.create_constraint = create_constraint
+        self._enum = enum_class
+        self._value2enum = dict((e.value, e) for e in enum_class.__members__.values())
+        super(IntValuesEnum, self).__init__(*args, **kwargs)
+
+    def process_bind_param(self, value, dialect):
+        db_value = get_enum_value(value)
+        if isinstance(db_value, int):
+            return db_value
+        return int(db_value)
+
+    def process_result_value(self, value, dialect):
+        return self._value2enum[value]
+
+    # _set_table() is called by SQLAlchemy as this class is marked as "SchemaType"
+    def _set_table(self, column, table):
+        if not self.create_constraint:
+            return
+
+        valid_enum_values = list(self._value2enum)
+        e = CheckConstraint(
+            type_coerce(column, self).in_(valid_enum_values),
+            name=_defer_name(column.name),
+        )
+        assert e.table is table
+
 
 
 def get_enum_value(enum_obj):
