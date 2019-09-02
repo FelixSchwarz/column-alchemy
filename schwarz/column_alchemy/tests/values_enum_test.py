@@ -69,3 +69,11 @@ class ValuesEnumTest(EnumDBTestCase):
         assert_equals(expected_enum, self._fetch_value(table))
         assert_equals(value, self._fetch_db_value(table))
 
+    def test_can_store_and_load_int_values(self):
+        NrConsts = Enum('NrConsts', ('ONE', 'TWO'))
+        assert_equals(1, NrConsts.ONE.value)
+
+        value_column = Column('value', ValuesEnum(NrConsts))
+        table = self._init_table_with_values([value_column], [{'value': NrConsts.ONE}])
+        assert_equals('1', self._fetch_db_value(table),)
+        assert_equals(NrConsts.ONE, self._fetch_value(table))

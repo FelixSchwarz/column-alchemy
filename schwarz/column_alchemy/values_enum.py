@@ -51,5 +51,8 @@ def get_enum_value(enum_obj):
     return value
 
 def get_enum_values(enum_class):
-    return [item.value for item in enum_class]
+    def as_str(item):
+        value = item.value
+        return str(value)
+    return [as_str(item) for item in enum_class]
 
