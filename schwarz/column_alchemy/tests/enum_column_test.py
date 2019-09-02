@@ -6,6 +6,7 @@
 from enum import Enum
 
 from ddt import ddt as DataDrivenTestCase, data
+from fstrings import f
 from pythonic_testcase import *
 import sqlalchemy
 from sqlalchemy import create_engine, Column, MetaData, Table
@@ -39,6 +40,14 @@ class EnumDBTestCase(PythonicTestCase):
         db_value = session.query(table).limit(1).scalar()
         return db_value
 
+    def _fetch_db_value(self, table):
+        "Fetches the DB values via low-level SQL."
+        select_query = sqlalchemy.text(f('SELECT * FROM {table.name} LIMIT 1'))
+        rows = self.connection.execute(select_query)
+        row = tuple(rows)[0]
+        assert len(row) == 1
+        return row[0]
+
     def _create_session(self, engine):
         Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
         return Session()
@@ -58,4 +67,5 @@ class ValuesEnumTest(EnumDBTestCase):
         table = self._init_table_with_values([value_column], [{'value': value}])
         expected_enum = value2enum.get(value)
         assert_equals(expected_enum, self._fetch_value(table))
+        assert_equals(value, self._fetch_db_value(table))
 
