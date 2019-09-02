@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2017 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
+# SPDX-License-Identifier: MIT
 
 from sqlalchemy.types import Enum as SQLEnum
 
