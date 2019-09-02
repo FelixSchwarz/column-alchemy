@@ -6,3 +6,5 @@ __pycache__
 .pydevproject
 .eggs
 venv*
+build
+dist
