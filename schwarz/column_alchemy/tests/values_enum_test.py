@@ -12,7 +12,7 @@ import sqlalchemy
 from sqlalchemy import create_engine, Column, MetaData, Table
 from sqlalchemy.orm import sessionmaker
 
-from ..enum_column import ValuesEnum
+from .. import ValuesEnum
 
 
 
