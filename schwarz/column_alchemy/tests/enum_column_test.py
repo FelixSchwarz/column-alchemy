@@ -9,7 +9,7 @@ from pythonic_testcase import *
 from sqlalchemy import create_engine, Column, MetaData, Table
 from sqlalchemy.orm import sessionmaker
 
-from enum_column import ValuesEnum
+from ..enum_column import ValuesEnum
 
 
 def create_session(engine):
