@@ -2,6 +2,7 @@
 # Copyright 2013, 2018 Felix Schwarz
 # The source code in this file is is dual licensed under the MIT license or
 # the GPLv3 or (at your option) any later version.
+# SPDX-License-Identifier: MIT or GPL-3.0-or-later
 
 from datetime import datetime
 
