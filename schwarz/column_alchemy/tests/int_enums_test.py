@@ -10,11 +10,10 @@ from sqlalchemy import Column
 from sqlalchemy.exc import IntegrityError
 
 from .. import IntValuesEnum
-from .values_enum_test import EnumDBTestCase
+from ..test_utils import DBTestCase
 
 
-
-class IntValuesEnumTest(EnumDBTestCase):
+class IntValuesEnumTest(DBTestCase):
     def test_can_store_and_load_int_values(self):
         NrConsts = Enum('NrConsts', ('ONE', 'TWO'))
         assert_equals(1, NrConsts.ONE.value)
