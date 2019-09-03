@@ -10,57 +10,33 @@ from datetime import datetime as DateTime
 
 from babel.util import FixedOffsetTimezone, UTC
 from pythonic_testcase import *
-from sqlalchemy import Column, Integer, MetaData, Table
-from sqlalchemy.engine import create_engine
+from sqlalchemy import Column
 from sqlalchemy.exc import StatementError
-from sqlalchemy.sql import select
 
-from ..utc_datetime_column import UTCDateTime
+from .. import UTCDateTime
+from ..test_utils import DBTestCase
 
 
-class UTCDateTimeTest(PythonicTestCase):
+class UTCDateTimeTest(DBTestCase):
     def setUp(self):
-        self.engine = create_engine('sqlite:///:memory:')
-        self.metadata = MetaData(bind=self.engine)
-        self.table = Table('utc_datetime', self.metadata,
-            Column('id', Integer(), primary_key=True, autoincrement=True),
-            Column('timestamp', UTCDateTime)
-        )
-        self.metadata.create_all()
-        self.db = self.engine.connect()
-
-    def tearDown(self):
-        self.metadata.drop_all()
-
-    def _insert(self, dt):
-        insertion = self.db.execute(
-            self.table.insert().values(timestamp=dt)
-        )
-        return insertion.inserted_primary_key[0]
-
-    def _fetch(self, item_id):
-        result = self.db.execute(
-            select([self.table]).where(self.table.c.id == item_id)
-        ).fetchone()
-        return result
+        super(UTCDateTimeTest, self).setUp()
+        ts_column = Column('timestamp', UTCDateTime)
+        self.table = self._init_table_with_values([ts_column])
 
     def test_can_store_datetime_with_timezone(self):
         dt = DateTime(2013, 5, 25, 9, 53, 24, tzinfo=FixedOffsetTimezone(-90))
-        inserted_id = self._insert(dt)
+        inserted_id = self._insert_data(self.table, [{'timestamp': dt}])
 
-        result = self._fetch(inserted_id)
-        assert_equals(1, result[0])
-        dt_from_db = result[1]
+        dt_from_db = self._fetch_value(self.table, id=inserted_id)
         assert_equals(dt, dt_from_db)
         assert_equals(UTC, dt_from_db.tzinfo)
 
     def test_raises_exception_for_naive_datetime(self):
         dt = DateTime(2013, 5, 25, 9, 53, 24)
         with assert_raises(StatementError):
-            self._insert(dt)
+            self._insert_data(self.table, [{'timestamp': dt}])
 
     def test_can_store_none(self):
-        inserted_id = self._insert(None)
-        result = self._fetch(inserted_id)
-        assert_equals((1, None), result)
+        inserted_id = self._insert_data(self.table, [{'timestamp': None}])
+        assert_none(self._fetch_value(self.table))
 
