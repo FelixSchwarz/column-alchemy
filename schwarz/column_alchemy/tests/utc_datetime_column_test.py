@@ -12,12 +12,7 @@ from babel.util import FixedOffsetTimezone, UTC
 from pythonic_testcase import *
 from sqlalchemy import Column, Integer, MetaData, Table
 from sqlalchemy.engine import create_engine
-try:
-    # SQLAlchemy 0.7+
-    from sqlalchemy.exc import StatementError
-except ImportError:
-    # SQLAlchemy 0.6.9
-    StatementError = ValueError
+from sqlalchemy.exc import StatementError
 from sqlalchemy.sql import select
 
 from ..utc_datetime_column import UTCDateTime
