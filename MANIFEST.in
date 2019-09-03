@@ -3,3 +3,4 @@ include dev_requirements.txt
 include requirements.txt
 include LICENSE.txt
 include LICENSE-UTCDateTime.txt
+include README.md
