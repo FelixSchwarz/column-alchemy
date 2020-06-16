@@ -40,9 +40,10 @@ class DBTestCase(PythonicTestCase):
         session = self._create_session(self.engine)
         query = session.query(table)
         if id is not None:
-            query = query.filter(table.c.id == id)
-        db_value = query.one()
-        return db_value[-1]
+            db_value = query.filter(table.c.id == id).one()
+        else:
+            db_value = query.one_or_none()
+        return db_value[-1] if (db_value is not None) else None
 
     def _fetch_db_value(self, table):
         "Fetches the DB values via low-level SQL."
