@@ -15,6 +15,8 @@ class YearMonth(object):
     def __init__(self, year, month):
         self.year = year
         self.month = month
+        # this raises a ValueError if month is not with 1..12
+        Date(self.year, self.month, 1)
 
     @classmethod
     def from_iso_string(cls, iso_str):

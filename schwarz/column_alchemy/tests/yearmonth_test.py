@@ -5,11 +5,13 @@
 
 from datetime import date as Date
 
+from ddt import ddt as DataDrivenTestCase, data as ddt_data
 from pythonic_testcase import *
 
 from ..yearmonth import YearMonth
 
 
+@DataDrivenTestCase
 class YearMonthTest(PythonicTestCase):
     def test_can_compare_with_greater(self):
         assert_true(YearMonth(2017, 12) > YearMonth(2016, 1))
@@ -39,6 +41,11 @@ class YearMonthTest(PythonicTestCase):
         assert_true(YearMonth(2016, 12) <= YearMonth(2017, 1))
         assert_false(YearMonth(2017, 12) <= YearMonth(2016, 1))
         assert_false(YearMonth(2017, 1) <= YearMonth(2016, 12))
+
+    @ddt_data(0, 13)
+    def test_rejects_invalid_months(self, month):
+        with assert_raises(ValueError, message='invalid month "%d"' % month):
+            YearMonth(2019, month)
 
     def test_can_return_current_month(self):
         today = Date.today()
