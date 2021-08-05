@@ -1,10 +1,11 @@
 *.pyc
 *.egg-info
 __pycache__
-.project
-.settings
-.pydevproject
+/.project
+/.settings
+/.pydevproject
 .eggs
-venv*
-build
-dist
+/venv*
+/build
+/dist
+/build-and-sign-release.sh
