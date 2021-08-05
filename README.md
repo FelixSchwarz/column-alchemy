@@ -1,7 +1,9 @@
 
 This repo contains a **custom column types for SQLAlchemy** which I use in different projects.
 
-The code should be compatible with SQLAlchemy 1.3.x.
+The code should be compatible with SQLAlchemy 1.2.3 - 1.4.x.
+
+    pip install ColumnAlchemy
 
 
 UTCDateTime
