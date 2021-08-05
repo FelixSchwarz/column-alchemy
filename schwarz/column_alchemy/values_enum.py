@@ -5,7 +5,7 @@
 
 from sqlalchemy.schema import CheckConstraint
 from sqlalchemy.sql import type_coerce
-from sqlalchemy.sql.elements import _defer_name
+from sqlalchemy.sql.elements import _NONE_NAME
 from sqlalchemy.sql.sqltypes import SchemaType
 from sqlalchemy.types import Enum as SQLEnum, Integer, TypeDecorator
 
@@ -55,6 +55,7 @@ class IntValuesEnum(TypeDecorator, SchemaType):
 
     def __init__(self, enum_class, create_constraint=True, *args, **kwargs):
         self.create_constraint = create_constraint
+        self.name = kwargs.pop('name', None)
         self._enum = enum_class
         self._value2enum = dict((e.value, e) for e in enum_class.__members__.values())
         super(IntValuesEnum, self).__init__(*args, **kwargs)
@@ -76,7 +77,7 @@ class IntValuesEnum(TypeDecorator, SchemaType):
         valid_enum_values = list(self._value2enum)
         e = CheckConstraint(
             type_coerce(column, self).in_(valid_enum_values),
-            name=_defer_name(column.name),
+            name=_NONE_NAME if self.name is None else self.name,
         )
         assert e.table is table
 

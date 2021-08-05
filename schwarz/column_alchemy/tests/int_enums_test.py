@@ -7,7 +7,7 @@ from enum import Enum
 
 from pythonic_testcase import *
 from sqlalchemy import Column
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, StatementError
 
 from .. import IntValuesEnum
 from ..test_utils import DBTestCase
