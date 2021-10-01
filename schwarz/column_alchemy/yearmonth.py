@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017, 2019, 2020 Felix Schwarz
+# Copyright (c) 2017, 2019-2021 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
 import calendar
 from datetime import date as Date, timedelta as TimeDelta
 import functools
+import re
 
 
 __all__ = ['YearMonth']
@@ -27,6 +28,20 @@ class YearMonth(object):
         return '%04d-%02d' % (self.year, self.month)
 
     @classmethod
+    def from_str(cls, month_str):
+        assert len(month_str) == 7
+        iso_pattern = r'^\d{4}\-\d{2}$'
+        if re.match(iso_pattern, month_str):
+            return cls.from_iso_string(month_str)
+
+        str_pattern = r'^(\d{2})/(\d{4})$'
+        m = re.match(str_pattern, month_str)
+        if m:
+            month_str, year_str = m.groups()
+            return YearMonth(int(year_str), int(month_str))
+        raise ValueError('unable to parse %r' % month_str)
+
+    @classmethod
     def from_int(cls, int_value):
         int_str = str(int_value)
         assert len(int_str) == 6
@@ -37,7 +52,13 @@ class YearMonth(object):
     def as_int(self):
         return int(self.as_compressed_string())
 
-    def as_compressed_string(self, two_digit_year=False):
+    def as_compressed_string(self, two_digit_year=None, full_year=None):
+        if (two_digit_year is None) and (full_year is None):
+            full_year = True
+        assert (bool(two_digit_year) ^ bool(full_year))
+        if full_year:
+            two_digit_year = False
+
         year_str = str(self.year)
         if two_digit_year:
             year_str = year_str[2:4]
@@ -64,6 +85,10 @@ class YearMonth(object):
     def previous_month(self):
         end_of_previous_month = self.first_date_of_month() - TimeDelta(days=1)
         return YearMonth.from_date(end_of_previous_month)
+
+    def next_month(self):
+        start_of_next_month = self.last_date_of_month() + TimeDelta(days=1)
+        return YearMonth.from_date(start_of_next_month)
 
     def __str__(self):
         return '%02d/%d' % (self.month, self.year)

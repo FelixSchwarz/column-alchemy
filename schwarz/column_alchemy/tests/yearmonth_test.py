@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017, 2019, 2020 Felix Schwarz
+# Copyright (c) 2017, 2019-2021 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
@@ -55,7 +55,17 @@ class YearMonthTest(PythonicTestCase):
     def test_can_return_previous_month(self):
         assert_equals(YearMonth(2019, 12), YearMonth(2020, 1).previous_month())
 
+    def test_can_return_next_month(self):
+        assert_equals(YearMonth(2019, 2), YearMonth(2019, 1).next_month())
+        assert_equals(YearMonth(2020, 1), YearMonth(2019, 12).next_month())
+
     def test_can_return_str(self):
         assert_equals('01/2020', str(YearMonth(2020, 1)))
         assert_equals('12/2019', str(YearMonth(2019, 12)))
+
+    def test_can_parse_str(self):
+        ym = YearMonth(2021, 2)
+        assert_equals(ym, YearMonth.from_str('02/2021'))
+        assert_equals(ym, YearMonth.from_str(str(ym)))
+        assert_equals(ym, YearMonth.from_str('2021-02'))
 
