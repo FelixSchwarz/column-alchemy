@@ -51,8 +51,6 @@ YearMonthColumn
 
 `YearMonth` is similar to `datetime.date` but without a `day` attribute. It can be used to represent a calendar month and provides some convenience methods like `first_date_of_month()` and `last_date_of_month()`. A **`YearMonthColumn`** stores a `YearMonth` instance as "YYYY-MM" in the database.
 
-This is especially useful to store decimal values even in sqlite which requires special treatment to store decimals.
-
     from schwarz.column_alchemy import YearMonth, YearMonthColumn
 
     class Foo(Base)
