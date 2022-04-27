@@ -26,16 +26,16 @@ class UTCDateTime(TypeDecorator):
         super(UTCDateTime, self).__init__(*args, **kwargs)
 
     def process_bind_param(self, value, dialect):
-        if value is not None:
-            if value.tzinfo is None:
-                # since Python 3.6 ".astimetzone()" also works on naive datetime
-                # instances so we have to check this separately.
-                raise ValueError('naive datetime instance passed: %r' % value)
-            utc_dt = value.astimezone(UTC)
-            if not self._strip_tz:
-                return utc_dt
+        if value is None:
+            return None
+        if value.tzinfo is None:
+            # since Python 3.6 ".astimetzone()" also works on naive datetime
+            # instances so we have to check this separately.
+            raise ValueError('naive datetime instance passed: %r' % value)
+        utc_dt = value.astimezone(UTC)
+        if self._strip_tz:
             return utc_dt.replace(tzinfo=None)
-        return None
+        return utc_dt
 
     def process_result_value(self, value, dialect):
         if value is None:
