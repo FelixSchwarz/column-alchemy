@@ -20,6 +20,7 @@ __all__ = ['UTCDateTime']
 
 class UTCDateTime(TypeDecorator):
     impl = DateTime
+    cache_ok = True
 
     def __init__(self, *args, **kwargs):
         self._strip_tz = kwargs.pop('strip_tz', True)
