@@ -23,11 +23,11 @@ jobs:
       run: |
         pip install "SQLAlchemy == ${{ matrix.sqlalchemy-version }}.*"
         pip install -e .[testing]
-        pip install nose2
+        pip install pytest
 
     - name: Run test suite
       run: |
-        nose2
+        pytest
 
 
   tests_new_env:
@@ -49,8 +49,8 @@ jobs:
       run: |
         pip install "SQLAlchemy == ${{ matrix.sqlalchemy-version }}.*"
         pip install -e .[testing]
-        pip install nose2
+        pip install pytest
 
     - name: Run test suite
       run: |
-        nose2
+        pytest
