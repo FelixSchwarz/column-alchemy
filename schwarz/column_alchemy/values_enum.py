@@ -5,7 +5,11 @@
 
 from sqlalchemy.schema import CheckConstraint
 from sqlalchemy.sql import type_coerce
-from sqlalchemy.sql.elements import _NONE_NAME
+try:
+    from sqlalchemy.sql.base import _NONE_NAME
+except ImportError:
+    # SQLAlchemy < 2.0
+    from sqlalchemy.sql.elements import _NONE_NAME
 from sqlalchemy.sql.sqltypes import SchemaType
 from sqlalchemy.types import Enum as SQLEnum, Integer, TypeDecorator
 

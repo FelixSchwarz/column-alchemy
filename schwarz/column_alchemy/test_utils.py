@@ -21,12 +21,12 @@ class DBTestCase(PythonicTestCase):
 
     # --- internal helpers ----------------------------------------------------
     def _init_table_with_values(self, columns, insertions=None):
-        metadata = MetaData(bind=self.connection)
+        metadata = MetaData()
         if len(columns) == 1:
             id_column = Column('id', Integer(), primary_key=True, autoincrement=True)
             columns = [id_column] + columns
         table = Table('foo', metadata, *columns)
-        metadata.create_all()
+        metadata.create_all(self.connection)
         if insertions:
             self._insert_data(table, insertions)
         return table
