@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017, 2019-2021 Felix Schwarz
+# Copyright (c) 2017, 2019-2021, 2023 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
@@ -66,6 +66,7 @@ class YearMonthTest(PythonicTestCase):
     def test_can_parse_str(self):
         ym = YearMonth(2021, 2)
         assert_equals(ym, YearMonth.from_str('02/2021'))
+        assert_equals(ym, YearMonth.from_str('2/2021'))
         assert_equals(ym, YearMonth.from_str(str(ym)))
         assert_equals(ym, YearMonth.from_str('2021-02'))
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017, 2019-2021 Felix Schwarz
+# Copyright (c) 2017, 2019-2021, 2023 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
@@ -29,17 +29,17 @@ class YearMonth(object):
 
     @classmethod
     def from_str(cls, month_str):
-        assert len(month_str) == 7
+        assert len(month_str) in (6, 7)
         iso_pattern = r'^\d{4}\-\d{2}$'
         if re.match(iso_pattern, month_str):
             return cls.from_iso_string(month_str)
 
-        str_pattern = r'^(\d{2})/(\d{4})$'
+        str_pattern = r'^(\d{1,2})/(\d{4})$'
         m = re.match(str_pattern, month_str)
         if m:
             month_str, year_str = m.groups()
             return YearMonth(int(year_str), int(month_str))
-        raise ValueError('unable to parse %r' % month_str)
+        raise ValueError('unable to parse "%r"' % month_str)
 
     @classmethod
     def from_int(cls, int_value):
