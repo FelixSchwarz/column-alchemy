@@ -6,10 +6,12 @@ jobs:
   tests_old_env:
     # "ubuntu-latest" does not have Python 3.6
     runs-on: ubuntu-20.04
+    container:
+      image: python:2.7.18-buster
     strategy:
       fail-fast: false
       matrix:
-        python-version: [2.7, 3.6, "pypy-2.7"]
+        python-version: [3.6, "pypy-2.7"]
         sqlalchemy-version: [1.2, 1.3, 1.4]
 
     steps:
@@ -28,6 +30,32 @@ jobs:
     - name: Run test suite
       run: |
         pytest
+
+
+  # GitHub Actions does not support Python 2 anymore via "actions/setup-python" since May 2023:
+  #     https://github.com/actions/setup-python/issues/672
+  # As a workaround use a Python 2.7 container which should have everything pre-installed.
+  tests_old_env_py2:
+    runs-on: ubuntu-20.04
+    container:
+      image: python:2.7.18-buster
+    strategy:
+      fail-fast: false
+      matrix:
+        sqlalchemy-version: [1.2, 1.3, 1.4]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        pip install "SQLAlchemy == ${{ matrix.sqlalchemy-version }}.*"
+        pip install -e .[testing]
+        pip install pytest
+
+    - name: Run test suite
+      run: |
+        pytest
+
 
 
   tests_new_env:
