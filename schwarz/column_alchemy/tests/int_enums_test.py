@@ -29,7 +29,8 @@ class IntValuesEnumTest(DBTestCase):
         value_column = Column('value', IntValuesEnum(NrConsts))
         table = self._init_table_with_values([value_column])
 
-        self._insert_data(table, [{'value': NrConsts.TWO}])
-        with assert_raises(IntegrityError):
-            self._insert_data(table, [{'value': 21}])
+        with self.connection.begin():
+            self._insert_data(table, [{'value': NrConsts.TWO}])
+            with assert_raises(IntegrityError):
+                self._insert_data(table, [{'value': 21}])
 

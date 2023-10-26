@@ -25,7 +25,8 @@ class UTCDateTimeTest(DBTestCase):
 
     def test_can_store_datetime_with_timezone(self):
         dt = DateTime(2013, 5, 25, 9, 53, 24, tzinfo=FixedOffsetTimezone(-90))
-        inserted_id = self._insert_data(self.table, [{'timestamp': dt}])
+        with self.connection.begin():
+            inserted_id = self._insert_data(self.table, [{'timestamp': dt}])
 
         dt_from_db = self._fetch_value(self.table, id=inserted_id)
         assert_equals(dt, dt_from_db)
@@ -37,6 +38,7 @@ class UTCDateTimeTest(DBTestCase):
             self._insert_data(self.table, [{'timestamp': dt}])
 
     def test_can_store_none(self):
-        inserted_id = self._insert_data(self.table, [{'timestamp': None}])
+        with self.connection.begin():
+            inserted_id = self._insert_data(self.table, [{'timestamp': None}])
         assert_none(self._fetch_value(self.table))
 

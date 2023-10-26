@@ -22,7 +22,8 @@ class ShiftedDecimalTest(DBTestCase):
     def test_can_store_and_load_values(self, value):
         c_value = Column('value', ShiftedDecimal(4))
         table = self._init_table_with_values([c_value])
-        inserted_id = self._insert_data(table, [{'value': value}])
+        with self.connection.begin():
+            inserted_id = self._insert_data(table, [{'value': value}])
 
         db_value = self._fetch_value(table, id=inserted_id)
         assert_equals(value, db_value)
