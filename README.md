@@ -1,7 +1,7 @@
 
 This repo contains a **custom column types for SQLAlchemy** which I use in different projects.
 
-The code should be compatible with SQLAlchemy 1.2.3 - 1.4.x.
+The code should be **compatible with SQLAlchemy 1.2.3 - 2.0** and **Python 2.7 and 3.6 - 3.12** as well as **pypy 2.7 + 3.9**.
 
     pip install ColumnAlchemy
 
