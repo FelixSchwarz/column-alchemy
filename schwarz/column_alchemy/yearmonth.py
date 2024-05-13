@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017, 2019-2021, 2023 Felix Schwarz
+# Copyright (c) 2017, 2019-2021, 2023, 2024 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
@@ -113,4 +113,7 @@ class YearMonth(object):
             return (self.year < other.year)
         return (self.month < other.month)
 
-
+    def __contains__(self, date):
+        if not isinstance(date, Date):
+            return False
+        return (date.year == self.year) and (date.month == self.month)

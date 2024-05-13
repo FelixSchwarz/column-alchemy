@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017, 2019-2021, 2023 Felix Schwarz
+# Copyright (c) 2017, 2019-2021, 2023, 2024 Felix Schwarz
 # The source code contained in this file is licensed under the MIT license.
 # SPDX-License-Identifier: MIT
 
@@ -70,3 +70,10 @@ class YearMonthTest(PythonicTestCase):
         assert_equals(ym, YearMonth.from_str(str(ym)))
         assert_equals(ym, YearMonth.from_str('2021-02'))
 
+
+def test_contains():
+    assert Date(2024, 3, 1) in YearMonth(2024, 3)
+    assert Date(2024, 3, 31) in YearMonth(2024, 3)
+    assert Date(2024, 4, 1) not in YearMonth(2024, 3)
+    assert Date(2024, 2, 29) not in YearMonth(2024, 3)
+    assert YearMonth(2024, 3) not in YearMonth(2024, 3)
