@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2013, 2018, 2019 Felix Schwarz
+# Copyright 2013, 2018, 2019, 2024 Felix Schwarz
 # The source code in this file is dual licensed under the MIT license or
 # the GPLv3 or (at your option) any later version.
 # SPDX-License-Identifier: MIT or GPL-3.0-or-later
@@ -8,37 +8,39 @@ from __future__ import absolute_import
 
 from datetime import datetime as DateTime
 
+import pytest
 from babel.util import FixedOffsetTimezone, UTC
-from pythonic_testcase import *
 from sqlalchemy import Column
 from sqlalchemy.exc import StatementError
 
 from .. import UTCDateTime
-from ..test_utils import DBTestCase
 
 
-class UTCDateTimeTest(DBTestCase):
-    def setUp(self):
-        super(UTCDateTimeTest, self).setUp()
-        ts_column = Column('timestamp', UTCDateTime)
-        self.table = self._init_table_with_values([ts_column])
+@pytest.fixture
+def ctx(db_ctx):
+    ts_column = Column('timestamp', UTCDateTime)
+    table = db_ctx.init_table_with_values([ts_column])
+    db_ctx.table = table
+    return db_ctx
 
-    def test_can_store_datetime_with_timezone(self):
-        dt = DateTime(2013, 5, 25, 9, 53, 24, tzinfo=FixedOffsetTimezone(-90))
-        with self.connection.begin():
-            inserted_id = self._insert_data(self.table, [{'timestamp': dt}])
 
-        dt_from_db = self._fetch_value(self.table, id=inserted_id)
-        assert_equals(dt, dt_from_db)
-        assert_equals(UTC, dt_from_db.tzinfo)
+def test_utc_datetime_can_store_datetime_with_timezone(ctx):
+    dt = DateTime(2013, 5, 25, 9, 53, 24, tzinfo=FixedOffsetTimezone(-90))
+    with ctx.connection.begin():
+        inserted_id = ctx.insert_data(ctx.table, [{'timestamp': dt}])
 
-    def test_raises_exception_for_naive_datetime(self):
-        dt = DateTime(2013, 5, 25, 9, 53, 24)
-        with assert_raises(StatementError):
-            self._insert_data(self.table, [{'timestamp': dt}])
+    dt_from_db = ctx.fetch_value(ctx.table, id=inserted_id)
+    assert dt_from_db == dt
+    assert dt_from_db.tzinfo == UTC
 
-    def test_can_store_none(self):
-        with self.connection.begin():
-            inserted_id = self._insert_data(self.table, [{'timestamp': None}])
-        assert_none(self._fetch_value(self.table))
 
+def test_utc_datetime_raises_exception_for_naive_datetime(ctx):
+    dt = DateTime(2013, 5, 25, 9, 53, 24)
+    with pytest.raises(StatementError):
+        ctx.insert_data(ctx.table, [{'timestamp': dt}])
+
+
+def test_utc_datetime_can_store_none(ctx):
+    with ctx.connection.begin():
+        _inserted_id = ctx.insert_data(ctx.table, [{'timestamp': None}])
+    assert ctx.fetch_value(ctx.table) is None
