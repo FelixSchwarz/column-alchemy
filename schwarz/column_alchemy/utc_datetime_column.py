@@ -4,9 +4,8 @@
 # the GPLv3 or (at your option) any later version.
 # SPDX-License-Identifier: MIT or GPL-3.0-or-later
 
-from datetime import datetime
+from datetime import datetime, timezone
 
-from babel.dates import UTC
 from sqlalchemy.types import DateTime, TypeDecorator
 
 
@@ -33,7 +32,7 @@ class UTCDateTime(TypeDecorator):
             # since Python 3.6 ".astimetzone()" also works on naive datetime
             # instances so we have to check this separately.
             raise ValueError('naive datetime instance passed: %r' % value)
-        utc_dt = value.astimezone(UTC)
+        utc_dt = value.astimezone(timezone.utc)
         if self._strip_tz:
             return utc_dt.replace(tzinfo=None)
         return utc_dt
@@ -43,6 +42,6 @@ class UTCDateTime(TypeDecorator):
             return None
         return datetime(value.year, value.month, value.day,
                         value.hour, value.minute, value.second,
-                        value.microsecond, tzinfo=UTC)
+                        value.microsecond, tzinfo=timezone.utc)
 # -----------------------------------------------------------------------------
 
