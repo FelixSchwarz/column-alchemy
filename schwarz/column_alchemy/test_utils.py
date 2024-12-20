@@ -5,7 +5,6 @@
 
 import pytest
 import sqlalchemy
-from fstrings import f
 from sqlalchemy import create_engine, Column, MetaData, Table
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.types import Integer
@@ -70,7 +69,7 @@ def _fetch_value(ctx, table, id=None):
 
 def _fetch_db_value(ctx, table):
     "Fetches the DB values via low-level SQL."
-    select_query = sqlalchemy.text(f('SELECT * FROM {table.name} LIMIT 1'))
+    select_query = sqlalchemy.text(f'SELECT * FROM {table.name} LIMIT 1')
     rows = ctx.connection.execute(select_query)
     row = tuple(rows)[0]
     assert len(row) == 2

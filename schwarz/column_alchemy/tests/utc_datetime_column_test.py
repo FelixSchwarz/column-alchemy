@@ -4,8 +4,6 @@
 # the GPLv3 or (at your option) any later version.
 # SPDX-License-Identifier: MIT or GPL-3.0-or-later
 
-from __future__ import absolute_import
-
 from datetime import datetime as DateTime
 
 import pytest

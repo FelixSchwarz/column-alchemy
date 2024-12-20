@@ -24,7 +24,7 @@ class UTCDateTime(TypeDecorator):
 
     def __init__(self, *args, **kwargs):
         self._strip_tz = kwargs.pop('strip_tz', True)
-        super(UTCDateTime, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def process_bind_param(self, value, dialect):
         if value is None:

@@ -7,8 +7,6 @@
 # project:
 # https://bitbucket.org/zzzeek/sqlalchemy/issues/1759/sqlite-support-for-arbitrary-precision#comment-9011277
 
-from __future__ import absolute_import, print_function, unicode_literals
-
 from decimal import Decimal
 
 from sqlalchemy.types import Integer, TypeDecorator

@@ -62,7 +62,7 @@ class IntValuesEnum(TypeDecorator, SchemaType):
         self.name = kwargs.pop('name', None)
         self._enum = enum_class
         self._value2enum = dict((e.value, e) for e in enum_class.__members__.values())
-        super(IntValuesEnum, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def process_bind_param(self, value, dialect):
         db_value = get_enum_value(value)
