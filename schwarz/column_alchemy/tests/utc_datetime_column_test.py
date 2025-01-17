@@ -10,7 +10,7 @@ import pytest
 from sqlalchemy import Column
 from sqlalchemy.exc import StatementError
 
-from .. import UTCDateTime
+from schwarz.column_alchemy import UTCDateTime
 
 
 @pytest.fixture

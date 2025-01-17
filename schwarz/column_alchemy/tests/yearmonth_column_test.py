@@ -6,7 +6,7 @@
 import pytest
 from sqlalchemy import Column
 
-from ..yearmonth_column import YearMonth, YearMonthColumn, YearMonthIntColumn
+from schwarz.column_alchemy import YearMonth, YearMonthColumn, YearMonthIntColumn
 
 
 @pytest.mark.parametrize('value', [

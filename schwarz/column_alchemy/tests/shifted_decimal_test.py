@@ -9,7 +9,7 @@ import pytest
 from sqlalchemy import Column
 from sqlalchemy.exc import StatementError
 
-from .. import ShiftedDecimal
+from schwarz.column_alchemy import ShiftedDecimal
 
 
 @pytest.mark.parametrize('value', [

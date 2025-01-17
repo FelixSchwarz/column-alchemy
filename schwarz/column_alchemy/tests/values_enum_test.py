@@ -8,7 +8,7 @@ from enum import Enum
 import pytest
 from sqlalchemy import Column
 
-from .. import ValuesEnum
+from schwarz.column_alchemy import ValuesEnum
 
 
 @pytest.mark.parametrize('value', [
