@@ -58,7 +58,7 @@ def _insert_data(ctx, table, insertions):
     return insertion.inserted_primary_key[0]
 
 def _fetch_value(ctx, table, id=None):
-    "Fetches the DB values via SQLAlchemy (so we should get Enum values)."
+    "Fetches the DB values via SQLAlchemy (so we should get Enum instances)."
     session = _create_session(ctx.engine)
     query = session.query(table)
     if id is not None:
