@@ -29,6 +29,7 @@ def numeric_to_db_int(number, scale):
 
 class ShiftedDecimal(TypeDecorator):
     impl = Integer
+    cache_ok = True
 
     def __init__(self, scale=2):
         TypeDecorator.__init__(self)

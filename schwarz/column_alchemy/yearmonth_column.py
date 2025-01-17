@@ -14,6 +14,7 @@ __all__ = ['YearMonthColumn', 'YearMonthIntColumn']
 
 class YearMonthColumn(TypeDecorator):
     impl = String(7)
+    cache_ok = True
 
     def process_bind_param(self, value, dialect):
         if value is None:
@@ -31,6 +32,7 @@ class YearMonthColumn(TypeDecorator):
 
 class YearMonthIntColumn(TypeDecorator):
     impl = Integer
+    cache_ok = True
 
     def process_bind_param(self, value, dialect):
         if value is None:
