@@ -37,7 +37,10 @@ class Context(object):
 @pytest.fixture
 def db_ctx():
     engine = create_engine('sqlite:///:memory:')
-    return Context(engine)
+    ctx = Context(engine)
+    yield ctx
+    # avoid `ResourceWarning: unclosed database ...` in Python 3.13+
+    engine.dispose()
 
 
 # --- internal helpers ----------------------------------------------------
