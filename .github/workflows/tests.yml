@@ -15,8 +15,7 @@ on:
 
 
 jobs:
-  tests_old_env:
-    # "ubuntu-latest" does not have Python 3.6
+  tests-cpython-old:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -29,36 +28,53 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Install dependencies and run tests
       run: |
+        python3 -m venv venv-test
+        . venv-test/bin/activate
         pip install "SQLAlchemy == ${{ matrix.sqlalchemy-version }}.*"
         pip install -e .[testing]
-
-    - name: Run test suite
-      run: |
         pytest
 
 
-  tests:
+  tests-cpython:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8, 3.9, "3.10", "3.11", "3.12", "3.13", "pypy-3.9"]
+        python-version: [3.8, 3.9, "3.10", "3.11", "3.12", "3.13"]
         sqlalchemy-version: [1.4, 2.0]
+    container:
+      image: python:${{ matrix.python-version }}
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-          python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
+    - name: Install dependencies and run tests
       run: |
+        python3 -m venv venv-test
+        . venv-test/bin/activate
         pip install "SQLAlchemy == ${{ matrix.sqlalchemy-version }}.*"
         pip install -e .[testing]
+        pytest
 
-    - name: Run test suite
+  tests-pypy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pypy-version: ["3.10", "3.11", "latest"]
+        sqlalchemy-version: [1.4, 2.0]
+    container:
+        image: pypy:${{ matrix.pypy-version }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies and run tests
       run: |
+        python3 -m venv venv-test
+        . venv-test/bin/activate
+        pip install "SQLAlchemy == ${{ matrix.sqlalchemy-version }}.*"
+        pip install -e .[testing]
         pytest
